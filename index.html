@@ -3,134 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Cá Nhân - An Toàn & Chuyên Nghiệp</title>
+    <title>Chat với AI (API Itsuki Online)</title>
     <style>
-        /* CSS cho Giao Diện "Chuẩn UI" */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #e9ebee;
+            padding: 20px;
+            background-color: #f4f4f4;
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            padding-top: 50px;
+            flex-direction: column;
+            align-items: center;
         }
-        .profile-card {
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        #chat-container {
             width: 100%;
-            max-width: 400px;
-            padding: 30px;
-            text-align: center;
-        }
-        h1 {
-            color: #1c1e21;
-            margin-bottom: 25px;
-        }
-        .section {
-            margin-bottom: 25px;
-            padding: 15px;
-            border: 1px solid #ddd;
+            max-width: 600px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
-            background-color: #f9f9f9;
-            text-align: left; /* Căn trái cho nội dung chi tiết */
+            display: flex;
+            flex-direction: column;
+            height: 70vh;
+            overflow: hidden;
         }
-        .section h2 {
-            color: #4b4f56;
-            font-size: 1.2em;
-            margin-top: 0;
+        #messages {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            border-bottom: 1px solid #eee;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 15px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background-color: #007bff;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 2px;
+        }
+        .ai-message {
+            background-color: #e2e2e2;
+            color: #333;
+            margin-right: auto;
+            border-bottom-left-radius: 2px;
+        }
+        #input-area {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+        #user-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        #send-button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        #send-button:hover {
+            background-color: #218838;
+        }
+        .loading {
             text-align: center;
-        }
-        .qr-image {
-            display: block;
-            margin: 10px auto;
-            border: 5px solid #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        /* Style cho Audio player */
-        audio {
-            width: 100%;
-        }
-        .social-links a {
-            display: inline-block;
-            margin: 0 10px;
-            text-decoration: none;
-            color: #007bff; /* Màu xanh dương chuẩn */
-            font-weight: bold;
-        }
-        .social-links a:hover {
-            color: #0056b3;
-            text-decoration: underline;
+            padding: 10px;
+            font-style: italic;
+            color: #666;
         }
     </style>
 </head>
 <body>
-    <div class="profile-card">
-        <h1>Profile Cá Nhân (Demo)</h1>
-        <p style="text-align: center;">Đây là trang profile an toàn, không chứa thông tin tài chính nhạy cảm.</p>
 
-        <div class="section">
-            <h2>Phát Nhạc Tự Động</h2>
-            <audio controls autoplay loop>
-                <source src="ten_bai_hat_cua_ban.mp3" type="audio/mp3">
-                Trình duyệt không hỗ trợ.
-            </audio>
-            <p style="font-align: center; font-size: 0.8em; color: #888;">*Lưu ý: Tính năng 'autoplay' (tự động phát) có thể bị chặn bởi hầu hết các trình duyệt hiện đại.</p>
+    <div id="chat-container">
+        <div id="messages">
+            <div class="message ai-message">Chào! Tôi là AI, bạn muốn hỏi gì?</div>
         </div>
-
-        <div class="section">
-            <h2>Mã QR Code (Nội dung Ngẫu nhiên/Tĩnh)</h2>
-            <img id="qrImage" class="qr-image" src="" alt="Mã QR Code">
-            <p style="text-align: center;">Nội dung mã QR: <span id="qrContent"></span></p>
-            <p style="font-size: 0.8em; color: red; text-align: center;">*Đây chỉ là nội dung ngẫu nhiên cho mục đích demo, KHÔNG liên quan đến bất kỳ giao dịch tài chính nào.</p>
-        </div>
-        
-        <div class="section">
-            <h2>Thông Tin Liên Hệ</h2>
-            <p><strong>Tên:</strong> Bùi Anh Quý (Demo)</p>
-            <p><strong>Email:</strong> buianhquy@example.com</p>
-            <p><strong>Số điện thoại:</strong> 09xxxxxx123</p>
-        </div>
-
-        <div class="section">
-            <h2>Mạng Xã Hội</h2>
-            <div class="social-links" style="text-align: center;">
-                <a href="https://facebook.com/yourusername" target="_blank">Facebook</a>
-                <a href="https://github.com/yourusername" target="_blank">GitHub</a>
-                <a href="https://t.me/yourusername" target="_blank">Telegram</a>
-            </div>
-            <p style="font-size: 0.8em; color: #888; text-align: center;">*Hãy thay đổi 'yourusername' bằng tài khoản thực tế của bạn.</p>
+        <div id="input-area">
+            <input type="text" id="user-input" placeholder="Nhập tin nhắn của bạn...">
+            <button id="send-button">Gửi</button>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Hàm tạo một chuỗi ngẫu nhiên (chỉ dùng để mô phỏng)
-            function generateRandomString(length) {
-                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                let result = '';
-                for (let i = 0; i < length; i++) {
-                    result += characters.charAt(Math.floor(Math.random() * characters.length));
-                }
-                // Sử dụng định dạng tương tự yêu cầu cũ nhưng với nội dung random
-                const currentDate = new Date();
-                const day = String(currentDate.getDate()).padStart(2, '0');
-                const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-                const year = currentDate.getFullYear();
-                return 'ITUSKI_' + day + month + year + '_' + result; 
-            }
+        const messagesDiv = document.getElementById('messages');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+        const apiUrlBase = 'https://api.itsuki.online/list/ai.php?reply=';
 
-            const randomContent = generateRandomString(4); // Tạo 4 ký tự random
-            document.getElementById('qrContent').textContent = randomContent;
-            
-            // SỬ DỤNG API TẠO QR CÔNG KHAI VÀ AN TOÀN
-            const qrImage = document.getElementById('qrImage');
-            const apiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(randomContent)}`;
-            qrImage.src = apiUrl;
+        // Hàm thêm tin nhắn vào khung chat
+        function appendMessage(text, sender) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            if (sender === 'user') {
+                messageElement.classList.add('user-message');
+            } else if (sender === 'ai') {
+                messageElement.classList.add('ai-message');
+            }
+            messageElement.textContent = text;
+            messagesDiv.appendChild(messageElement);
+            // Cuộn xuống cuối
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // Hàm xử lý gửi tin nhắn
+        async function sendMessage() {
+            const text = userInput.value.trim();
+            if (text === '') return;
+
+            // 1. Hiển thị tin nhắn của người dùng
+            appendMessage(text, 'user');
+            userInput.value = ''; // Xóa nội dung input
+
+            // 2. Thêm thông báo đang tải
+            const loadingElement = document.createElement('div');
+            loadingElement.classList.add('loading');
+            loadingElement.id = 'loading-indicator';
+            loadingElement.textContent = 'AI đang trả lời...';
+            messagesDiv.appendChild(loadingElement);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            // 3. Chuẩn bị URL API
+            // Mã hóa câu hỏi để an toàn khi truyền qua URL
+            const encodedReply = encodeURIComponent(text);
+            const fullUrl = apiUrlBase + encodedReply;
+
+            // 4. Gọi API
+            try {
+                const response = await fetch(fullUrl);
+                
+                // Xóa thông báo đang tải
+                messagesDiv.removeChild(loadingElement);
+
+                if (!response.ok) {
+                    throw new Error(`Lỗi HTTP! Trạng thái: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Lấy nội dung trả lời từ JSON
+                const aiReply = data.result || "Xin lỗi, tôi không thể trả lời câu hỏi này lúc này.";
+
+                // 5. Hiển thị tin nhắn của AI
+                appendMessage(aiReply, 'ai');
+
+            } catch (error) {
+                console.error('Lỗi khi gọi API:', error);
+                
+                // Đảm bảo thông báo đang tải được xóa nếu có lỗi
+                const existingLoading = document.getElementById('loading-indicator');
+                if (existingLoading) {
+                    messagesDiv.removeChild(existingLoading);
+                }
+
+                // 6. Hiển thị thông báo lỗi
+                appendMessage("Lỗi kết nối hoặc xử lý API. Vui lòng thử lại.", 'ai');
+            }
+        }
+
+        // Gắn sự kiện cho nút Gửi
+        sendButton.addEventListener('click', sendMessage);
+
+        // Gắn sự kiện cho phím Enter trong input
+        userInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
         });
     </script>
+
 </body>
 </html>
