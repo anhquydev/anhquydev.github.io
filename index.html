@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat AI - Itsuki Online (HTML + Bootstrap)</title>
+    <title>Chat AI - Itsuki Online (Đã Fix)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -17,7 +17,7 @@
         #chat-container {
             width: 100%;
             max-width: 700px;
-            height: 80vh; /* Chiều cao chat cố định */
+            height: 80vh; 
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             border-radius: 12px;
             overflow: hidden;
@@ -29,23 +29,21 @@
             flex-grow: 1;
             padding: 1rem;
             overflow-y: auto;
-            background-color: #e5ddd5; /* Nền chat nhẹ nhàng */
+            background-color: #e5ddd5; 
         }
-        /* Tin nhắn người dùng (Sender - You) */
         .message.user-message {
             display: flex;
             justify-content: flex-end;
             margin-bottom: 0.5rem;
         }
         .user-message .message-bubble {
-            background-color: #007bff; /* Màu xanh dương Bootstrap */
+            background-color: #007bff; 
             color: white;
             border-radius: 10px 10px 0 10px;
             padding: 0.6rem 1rem;
             max-width: 80%;
             word-wrap: break-word;
         }
-        /* Tin nhắn AI (Receiver - AI) */
         .message.ai-message {
             display: flex;
             justify-content: flex-start;
@@ -82,7 +80,7 @@
         
         <div id="messages">
             <div class="message ai-message">
-                <div class="message-bubble">Chào! Tôi là Sim, một mô hình AI được Itsuki phát triển. Bạn muốn hỏi gì hôm nay?</div>
+                <div class="message-bubble">Chào! Tôi là Sim, một mô hình AI dùng API Itsuki. Hãy hỏi tôi bất kỳ điều gì!</div>
             </div>
         </div>
         
@@ -106,8 +104,10 @@
         const sendButton = document.getElementById('send-button');
         const apiUrlBase = 'https://api.itsuki.online/list/ai.php?reply=';
 
+        // Hàm thêm tin nhắn và cuộn xuống
         function appendMessage(text, sender) {
             const messageWrapper = document.createElement('div');
+            // Thêm class 'message' và class chỉ định người gửi
             messageWrapper.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
             
             const bubble = document.createElement('div');
@@ -117,7 +117,7 @@
             messageWrapper.appendChild(bubble);
             messagesDiv.appendChild(messageWrapper);
             
-            // Cuộn xuống cuối
+            // Cuộn xuống cuối khung chat
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
 
@@ -125,7 +125,7 @@
             const text = userInput.value.trim();
             if (text === '') return;
 
-            // 1. Hiển thị tin nhắn người dùng
+            // 1. Hiển thị tin nhắn người dùng và vô hiệu hóa input
             appendMessage(text, 'user');
             userInput.value = ''; 
             userInput.disabled = true;
@@ -152,36 +152,44 @@
                 if(loadingElement) messagesDiv.removeChild(loadingElement);
 
                 if (!response.ok) {
-                    throw new Error(`Lỗi HTTP! Trạng thái: ${response.status}`);
+                    // Nếu nhận mã lỗi HTTP (404, 500, v.v.)
+                    throw new Error(`HTTP Error! Status: ${response.status}. Response text: ${await response.text()}`);
                 }
 
                 const data = await response.json();
                 
-                const aiReply = data.result || "Xin lỗi, tôi không nhận được câu trả lời hợp lệ từ API.";
+                // Kiểm tra xem trường 'result' có tồn tại không
+                const aiReply = data.result || "Xin lỗi, API phản hồi không hợp lệ (thiếu trường 'result').";
 
                 // 5. Hiển thị tin nhắn của AI
                 appendMessage(aiReply, 'ai');
 
             } catch (error) {
-                console.error('Lỗi khi gọi API:', error);
+                console.error('LỖI KẾT NỐI HOẶC XỬ LÝ API:', error);
                 
                 // Xóa thông báo đang tải nếu có lỗi
                 const loadingElement = document.getElementById('loading-indicator');
                 if(loadingElement) messagesDiv.removeChild(loadingElement);
                 
-                // 6. Hiển thị thông báo lỗi
-                appendMessage("Lỗi kết nối hoặc xử lý API. Vui lòng kiểm tra Console (F12).", 'ai');
+                // 6. Hiển thị thông báo lỗi thân thiện
+                // Lỗi CORS thường hiện là "Failed to fetch" trong Console.
+                const userFriendlyError = error.name === 'TypeError' && error.message === 'Failed to fetch' 
+                    ? "Lỗi kết nối (CORS/Mạng). Vui lòng thử chạy bằng máy chủ web cục bộ."
+                    : `Lỗi xử lý API: ${error.message.substring(0, 50)}...`;
+
+                appendMessage(userFriendlyError, 'ai');
+
             } finally {
+                // Luôn mở lại input và nút Gửi
                 userInput.disabled = false;
                 sendButton.disabled = false;
-                userInput.focus(); // Tập trung lại vào ô nhập liệu
+                userInput.focus(); 
             }
         }
 
-        // Gắn sự kiện cho nút Gửi
+        // Gắn sự kiện cho nút Gửi và phím Enter
         sendButton.addEventListener('click', sendMessage);
 
-        // Gắn sự kiện cho phím Enter
         userInput.addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
                 sendMessage();
