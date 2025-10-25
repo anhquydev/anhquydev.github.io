@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat AI - Itsuki Online (Đã Fix)</title>
+    <title>Chat AI - Itsuki Online</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -13,42 +13,51 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
+
         #chat-container {
             width: 100%;
             max-width: 700px;
-            height: 80vh; 
+            height: 80vh;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             border-radius: 12px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             background-color: white;
+            transition: background-color 0.3s ease;
+            position: relative;
         }
+
         #messages {
             flex-grow: 1;
             padding: 1rem;
             overflow-y: auto;
-            background-color: #e5ddd5; 
+            background-color: #e5ddd5;
         }
+
         .message.user-message {
             display: flex;
             justify-content: flex-end;
             margin-bottom: 0.5rem;
         }
+
         .user-message .message-bubble {
-            background-color: #007bff; 
+            background-color: #007bff;
             color: white;
             border-radius: 10px 10px 0 10px;
             padding: 0.6rem 1rem;
             max-width: 80%;
             word-wrap: break-word;
         }
+
         .message.ai-message {
             display: flex;
             justify-content: flex-start;
             margin-bottom: 0.5rem;
         }
+
         .ai-message .message-bubble {
             background-color: #ffffff;
             color: #333;
@@ -58,16 +67,63 @@
             word-wrap: break-word;
             box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
         }
+
         #input-area {
             border-top: 1px solid #dee2e6;
             padding: 1rem;
             background-color: #f8f9fa;
         }
+
         .loading {
             text-align: center;
             padding: 10px;
             font-style: italic;
             color: #6c757d;
+        }
+
+        /* ====== DARK MODE ====== */
+        body.dark {
+            background-color: #181818;
+            color: #f0f0f0;
+        }
+        body.dark #chat-container {
+            background-color: #222;
+        }
+        body.dark #messages {
+            background-color: #2a2a2a;
+        }
+        body.dark .ai-message .message-bubble {
+            background-color: #333;
+            color: #fff;
+        }
+        body.dark .user-message .message-bubble {
+            background-color: #0d6efd;
+        }
+        body.dark #input-area {
+            background-color: #2a2a2a;
+            border-top: 1px solid #444;
+        }
+
+        /* Toggle theme button */
+        #toggle-theme {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: rgba(255, 255, 255, 0.3);
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        #toggle-theme:hover {
+            background: rgba(255, 255, 255, 0.5);
         }
     </style>
 </head>
@@ -77,13 +133,15 @@
         <div class="p-3 bg-primary text-white text-center">
             <h5 class="mb-0">🤖 Trò Chuyện với Sim AI</h5>
         </div>
-        
+
+        <button id="toggle-theme" title="Đổi giao diện">🌙</button>
+
         <div id="messages">
             <div class="message ai-message">
                 <div class="message-bubble">Chào! Tôi là Sim, một mô hình AI dùng API Itsuki. Hãy hỏi tôi bất kỳ điều gì!</div>
             </div>
         </div>
-        
+
         <div id="input-area">
             <div class="input-group">
                 <input type="text" id="user-input" class="form-control rounded-pill" placeholder="Nhập tin nhắn của bạn..." aria-label="Nhập tin nhắn">
@@ -96,106 +154,85 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
         const messagesDiv = document.getElementById('messages');
         const userInput = document.getElementById('user-input');
         const sendButton = document.getElementById('send-button');
         const apiUrlBase = 'https://api.itsuki.online/list/ai.php?reply=';
 
-        // Hàm thêm tin nhắn và cuộn xuống
+        // ======== Lưu & Tải lịch sử chat ========
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('chatHistory');
+            if (saved) messagesDiv.innerHTML = saved;
+        });
+
+        function saveChat() {
+            localStorage.setItem('chatHistory', messagesDiv.innerHTML);
+        }
+
+        // ======== Gửi tin nhắn ========
         function appendMessage(text, sender) {
             const messageWrapper = document.createElement('div');
-            // Thêm class 'message' và class chỉ định người gửi
             messageWrapper.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
-            
+
             const bubble = document.createElement('div');
             bubble.classList.add('message-bubble');
             bubble.textContent = text;
-            
+
             messageWrapper.appendChild(bubble);
             messagesDiv.appendChild(messageWrapper);
-            
-            // Cuộn xuống cuối khung chat
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            saveChat();
         }
 
         async function sendMessage() {
             const text = userInput.value.trim();
             if (text === '') return;
 
-            // 1. Hiển thị tin nhắn người dùng và vô hiệu hóa input
             appendMessage(text, 'user');
-            userInput.value = ''; 
+            userInput.value = '';
             userInput.disabled = true;
             sendButton.disabled = true;
 
-            // 2. Thêm thông báo đang tải
-            const loadingWrapper = document.createElement('div');
-            loadingWrapper.classList.add('loading');
-            loadingWrapper.id = 'loading-indicator';
-            loadingWrapper.textContent = 'AI đang gõ...';
-            messagesDiv.appendChild(loadingWrapper);
+            const loading = document.createElement('div');
+            loading.classList.add('loading');
+            loading.id = 'loading-indicator';
+            loading.textContent = 'AI đang gõ...';
+            messagesDiv.appendChild(loading);
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
-            // 3. Chuẩn bị URL API
-            const encodedReply = encodeURIComponent(text);
-            const fullUrl = apiUrlBase + encodedReply;
-
-            // 4. Gọi API
             try {
-                const response = await fetch(fullUrl);
-                
-                // Xóa thông báo đang tải
-                const loadingElement = document.getElementById('loading-indicator');
-                if(loadingElement) messagesDiv.removeChild(loadingElement);
+                const response = await fetch(apiUrlBase + encodeURIComponent(text));
+                const loadingEl = document.getElementById('loading-indicator');
+                if (loadingEl) loadingEl.remove();
 
-                if (!response.ok) {
-                    // Nếu nhận mã lỗi HTTP (404, 500, v.v.)
-                    throw new Error(`HTTP Error! Status: ${response.status}. Response text: ${await response.text()}`);
-                }
-
+                if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
                 const data = await response.json();
-                
-                // Kiểm tra xem trường 'result' có tồn tại không
-                const aiReply = data.result || "Xin lỗi, API phản hồi không hợp lệ (thiếu trường 'result').";
-
-                // 5. Hiển thị tin nhắn của AI
+                const aiReply = data.result || "Xin lỗi, không nhận được phản hồi hợp lệ.";
                 appendMessage(aiReply, 'ai');
-
             } catch (error) {
-                console.error('LỖI KẾT NỐI HOẶC XỬ LÝ API:', error);
-                
-                // Xóa thông báo đang tải nếu có lỗi
-                const loadingElement = document.getElementById('loading-indicator');
-                if(loadingElement) messagesDiv.removeChild(loadingElement);
-                
-                // 6. Hiển thị thông báo lỗi thân thiện
-                // Lỗi CORS thường hiện là "Failed to fetch" trong Console.
-                const userFriendlyError = error.name === 'TypeError' && error.message === 'Failed to fetch' 
-                    ? "Lỗi kết nối (CORS/Mạng). Vui lòng thử chạy bằng máy chủ web cục bộ."
-                    : `Lỗi xử lý API: ${error.message.substring(0, 50)}...`;
-
-                appendMessage(userFriendlyError, 'ai');
-
+                const loadingEl = document.getElementById('loading-indicator');
+                if (loadingEl) loadingEl.remove();
+                appendMessage("⚠️ Lỗi kết nối hoặc API không phản hồi. Hãy thử lại sau.", 'ai');
+                console.error(error);
             } finally {
-                // Luôn mở lại input và nút Gửi
                 userInput.disabled = false;
                 sendButton.disabled = false;
-                userInput.focus(); 
+                userInput.focus();
             }
         }
 
-        // Gắn sự kiện cho nút Gửi và phím Enter
         sendButton.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', e => {
+            if (e.key === 'Enter') sendMessage();
+        });
 
-        userInput.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
+        // ======== Dark Mode Toggle ========
+        const toggleTheme = document.getElementById('toggle-theme');
+        toggleTheme.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            toggleTheme.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
         });
     </script>
-
 </body>
 </html>
