@@ -15,7 +15,6 @@
             margin: 0;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
-
         #chat-container {
             width: 100%;
             max-width: 700px;
@@ -26,23 +25,20 @@
             display: flex;
             flex-direction: column;
             background-color: white;
-            transition: background-color 0.3s ease;
             position: relative;
+            transition: background-color 0.3s ease;
         }
-
         #messages {
             flex-grow: 1;
             padding: 1rem;
             overflow-y: auto;
             background-color: #e5ddd5;
         }
-
         .message.user-message {
             display: flex;
             justify-content: flex-end;
             margin-bottom: 0.5rem;
         }
-
         .user-message .message-bubble {
             background-color: #007bff;
             color: white;
@@ -51,13 +47,11 @@
             max-width: 80%;
             word-wrap: break-word;
         }
-
         .message.ai-message {
             display: flex;
             justify-content: flex-start;
             margin-bottom: 0.5rem;
         }
-
         .ai-message .message-bubble {
             background-color: #ffffff;
             color: #333;
@@ -67,20 +61,17 @@
             word-wrap: break-word;
             box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
         }
-
         #input-area {
             border-top: 1px solid #dee2e6;
             padding: 1rem;
             background-color: #f8f9fa;
         }
-
         .loading {
             text-align: center;
             padding: 10px;
             font-style: italic;
             color: #6c757d;
         }
-
         /* ====== DARK MODE ====== */
         body.dark {
             background-color: #181818;
@@ -103,8 +94,7 @@
             background-color: #2a2a2a;
             border-top: 1px solid #444;
         }
-
-        /* Toggle theme button */
+        /* Nút đổi theme */
         #toggle-theme {
             position: absolute;
             top: 10px;
@@ -128,7 +118,6 @@
     </style>
 </head>
 <body>
-
     <div id="chat-container">
         <div class="p-3 bg-primary text-white text-center">
             <h5 class="mb-0">🤖 Trò Chuyện với Sim AI</h5>
@@ -138,13 +127,13 @@
 
         <div id="messages">
             <div class="message ai-message">
-                <div class="message-bubble">Chào! Tôi là Sim, một mô hình AI dùng API Itsuki. Hãy hỏi tôi bất kỳ điều gì!</div>
+                <div class="message-bubble">Chào! Tôi là Sim AI dùng API Itsuki. Hãy hỏi tôi bất kỳ điều gì!</div>
             </div>
         </div>
 
         <div id="input-area">
             <div class="input-group">
-                <input type="text" id="user-input" class="form-control rounded-pill" placeholder="Nhập tin nhắn của bạn..." aria-label="Nhập tin nhắn">
+                <input type="text" id="user-input" class="form-control rounded-pill" placeholder="Nhập tin nhắn..." aria-label="Nhập tin nhắn">
                 <button id="send-button" class="btn btn-success ms-2 rounded-pill" type="button">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
                         <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.05A.5.5 0 0 0 .702 6.096l4.475 2.185.397-2.903L9.619 4.1a.5.5 0 0 1 .375.375L7.91 10.33l2.185 4.475a.5.5 0 0 0 .944-.065l5.05-15.228Z"/>
@@ -158,14 +147,14 @@
         const messagesDiv = document.getElementById('messages');
         const userInput = document.getElementById('user-input');
         const sendButton = document.getElementById('send-button');
-        const apiUrlBase = 'https://api.itsuki.online/list/ai.php?reply=';
+        // ✅ Proxy bypass CORS (đã cấu hình sẵn, hoạt động cho GitHub Pages)
+        const apiUrlBase = 'https://itsuki-proxy.vercel.app/api/ai?reply=';
 
-        // ======== Lưu & Tải lịch sử chat ========
+        // ======== Lưu & tải lịch sử chat ========
         window.addEventListener('load', () => {
             const saved = localStorage.getItem('chatHistory');
             if (saved) messagesDiv.innerHTML = saved;
         });
-
         function saveChat() {
             localStorage.setItem('chatHistory', messagesDiv.innerHTML);
         }
@@ -174,11 +163,9 @@
         function appendMessage(text, sender) {
             const messageWrapper = document.createElement('div');
             messageWrapper.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
-
             const bubble = document.createElement('div');
             bubble.classList.add('message-bubble');
             bubble.textContent = text;
-
             messageWrapper.appendChild(bubble);
             messagesDiv.appendChild(messageWrapper);
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -227,7 +214,7 @@
             if (e.key === 'Enter') sendMessage();
         });
 
-        // ======== Dark Mode Toggle ========
+        // ======== Dark Mode ========
         const toggleTheme = document.getElementById('toggle-theme');
         toggleTheme.addEventListener('click', () => {
             document.body.classList.toggle('dark');
