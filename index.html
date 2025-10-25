@@ -3,98 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat với AI (API Itsuki Online)</title>
+    <title>Chat AI - Itsuki Online (HTML + Bootstrap)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
+            background-color: #f0f2f5;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
+            min-height: 100vh;
+            margin: 0;
         }
         #chat-container {
             width: 100%;
-            max-width: 600px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            max-width: 700px;
+            height: 80vh; /* Chiều cao chat cố định */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            height: 70vh;
-            overflow: hidden;
+            background-color: white;
         }
         #messages {
             flex-grow: 1;
-            padding: 15px;
+            padding: 1rem;
             overflow-y: auto;
-            border-bottom: 1px solid #eee;
+            background-color: #e5ddd5; /* Nền chat nhẹ nhàng */
         }
-        .message {
-            margin-bottom: 10px;
-            padding: 8px 12px;
-            border-radius: 15px;
+        /* Tin nhắn người dùng (Sender - You) */
+        .message.user-message {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 0.5rem;
+        }
+        .user-message .message-bubble {
+            background-color: #007bff; /* Màu xanh dương Bootstrap */
+            color: white;
+            border-radius: 10px 10px 0 10px;
+            padding: 0.6rem 1rem;
             max-width: 80%;
             word-wrap: break-word;
         }
-        .user-message {
-            background-color: #007bff;
-            color: white;
-            margin-left: auto;
-            border-bottom-right-radius: 2px;
+        /* Tin nhắn AI (Receiver - AI) */
+        .message.ai-message {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 0.5rem;
         }
-        .ai-message {
-            background-color: #e2e2e2;
+        .ai-message .message-bubble {
+            background-color: #ffffff;
             color: #333;
-            margin-right: auto;
-            border-bottom-left-radius: 2px;
+            border-radius: 10px 10px 10px 0;
+            padding: 0.6rem 1rem;
+            max-width: 80%;
+            word-wrap: break-word;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
         }
         #input-area {
-            display: flex;
-            padding: 10px;
-            border-top: 1px solid #ddd;
-        }
-        #user-input {
-            flex-grow: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 20px;
-            margin-right: 10px;
-            font-size: 16px;
-        }
-        #send-button {
-            padding: 10px 15px;
-            border: none;
-            background-color: #28a745;
-            color: white;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
-        #send-button:hover {
-            background-color: #218838;
+            border-top: 1px solid #dee2e6;
+            padding: 1rem;
+            background-color: #f8f9fa;
         }
         .loading {
             text-align: center;
             padding: 10px;
             font-style: italic;
-            color: #666;
+            color: #6c757d;
         }
     </style>
 </head>
 <body>
 
     <div id="chat-container">
-        <div id="messages">
-            <div class="message ai-message">Chào! Tôi là AI, bạn muốn hỏi gì?</div>
+        <div class="p-3 bg-primary text-white text-center">
+            <h5 class="mb-0">🤖 Trò Chuyện với Sim AI</h5>
         </div>
+        
+        <div id="messages">
+            <div class="message ai-message">
+                <div class="message-bubble">Chào! Tôi là Sim, một mô hình AI được Itsuki phát triển. Bạn muốn hỏi gì hôm nay?</div>
+            </div>
+        </div>
+        
         <div id="input-area">
-            <input type="text" id="user-input" placeholder="Nhập tin nhắn của bạn...">
-            <button id="send-button">Gửi</button>
+            <div class="input-group">
+                <input type="text" id="user-input" class="form-control rounded-pill" placeholder="Nhập tin nhắn của bạn..." aria-label="Nhập tin nhắn">
+                <button id="send-button" class="btn btn-success ms-2 rounded-pill" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
+                        <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.05A.5.5 0 0 0 .702 6.096l4.475 2.185.397-2.903L9.619 4.1a.5.5 0 0 1 .375.375L7.91 10.33l2.185 4.475a.5.5 0 0 0 .944-.065l5.05-15.228Z"/>
+                    </svg>
+                </button>
+            </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         const messagesDiv = document.getElementById('messages');
@@ -102,40 +106,40 @@
         const sendButton = document.getElementById('send-button');
         const apiUrlBase = 'https://api.itsuki.online/list/ai.php?reply=';
 
-        // Hàm thêm tin nhắn vào khung chat
         function appendMessage(text, sender) {
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message');
-            if (sender === 'user') {
-                messageElement.classList.add('user-message');
-            } else if (sender === 'ai') {
-                messageElement.classList.add('ai-message');
-            }
-            messageElement.textContent = text;
-            messagesDiv.appendChild(messageElement);
+            const messageWrapper = document.createElement('div');
+            messageWrapper.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
+            
+            const bubble = document.createElement('div');
+            bubble.classList.add('message-bubble');
+            bubble.textContent = text;
+            
+            messageWrapper.appendChild(bubble);
+            messagesDiv.appendChild(messageWrapper);
+            
             // Cuộn xuống cuối
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
 
-        // Hàm xử lý gửi tin nhắn
         async function sendMessage() {
             const text = userInput.value.trim();
             if (text === '') return;
 
-            // 1. Hiển thị tin nhắn của người dùng
+            // 1. Hiển thị tin nhắn người dùng
             appendMessage(text, 'user');
-            userInput.value = ''; // Xóa nội dung input
+            userInput.value = ''; 
+            userInput.disabled = true;
+            sendButton.disabled = true;
 
             // 2. Thêm thông báo đang tải
-            const loadingElement = document.createElement('div');
-            loadingElement.classList.add('loading');
-            loadingElement.id = 'loading-indicator';
-            loadingElement.textContent = 'AI đang trả lời...';
-            messagesDiv.appendChild(loadingElement);
+            const loadingWrapper = document.createElement('div');
+            loadingWrapper.classList.add('loading');
+            loadingWrapper.id = 'loading-indicator';
+            loadingWrapper.textContent = 'AI đang gõ...';
+            messagesDiv.appendChild(loadingWrapper);
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
             // 3. Chuẩn bị URL API
-            // Mã hóa câu hỏi để an toàn khi truyền qua URL
             const encodedReply = encodeURIComponent(text);
             const fullUrl = apiUrlBase + encodedReply;
 
@@ -144,7 +148,8 @@
                 const response = await fetch(fullUrl);
                 
                 // Xóa thông báo đang tải
-                messagesDiv.removeChild(loadingElement);
+                const loadingElement = document.getElementById('loading-indicator');
+                if(loadingElement) messagesDiv.removeChild(loadingElement);
 
                 if (!response.ok) {
                     throw new Error(`Lỗi HTTP! Trạng thái: ${response.status}`);
@@ -152,8 +157,7 @@
 
                 const data = await response.json();
                 
-                // Lấy nội dung trả lời từ JSON
-                const aiReply = data.result || "Xin lỗi, tôi không thể trả lời câu hỏi này lúc này.";
+                const aiReply = data.result || "Xin lỗi, tôi không nhận được câu trả lời hợp lệ từ API.";
 
                 // 5. Hiển thị tin nhắn của AI
                 appendMessage(aiReply, 'ai');
@@ -161,21 +165,23 @@
             } catch (error) {
                 console.error('Lỗi khi gọi API:', error);
                 
-                // Đảm bảo thông báo đang tải được xóa nếu có lỗi
-                const existingLoading = document.getElementById('loading-indicator');
-                if (existingLoading) {
-                    messagesDiv.removeChild(existingLoading);
-                }
-
+                // Xóa thông báo đang tải nếu có lỗi
+                const loadingElement = document.getElementById('loading-indicator');
+                if(loadingElement) messagesDiv.removeChild(loadingElement);
+                
                 // 6. Hiển thị thông báo lỗi
-                appendMessage("Lỗi kết nối hoặc xử lý API. Vui lòng thử lại.", 'ai');
+                appendMessage("Lỗi kết nối hoặc xử lý API. Vui lòng kiểm tra Console (F12).", 'ai');
+            } finally {
+                userInput.disabled = false;
+                sendButton.disabled = false;
+                userInput.focus(); // Tập trung lại vào ô nhập liệu
             }
         }
 
         // Gắn sự kiện cho nút Gửi
         sendButton.addEventListener('click', sendMessage);
 
-        // Gắn sự kiện cho phím Enter trong input
+        // Gắn sự kiện cho phím Enter
         userInput.addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
                 sendMessage();
