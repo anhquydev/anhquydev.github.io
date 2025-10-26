@@ -3,223 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat AI - Itsuki Online</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Hồ Sơ Kỹ Thuật - [Tên Của Bạn]</title>
     <style>
+        /* CSS cho giao diện phong cách kỹ thuật (Dark Theme) */
+        :root {
+            --main-bg-color: #1a1a1a;
+            --text-color: #00ff41; /* Màu xanh neon thường thấy */
+            --secondary-text-color: #cccccc;
+            --card-bg-color: #2a2a2a;
+            --border-color: #006400; /* Xanh đậm cho viền */
+            --font-mono: 'Hack', 'Fira Code', 'Roboto Mono', monospace;
+        }
+
         body {
-            background-color: #f0f2f5;
+            background-color: var(--main-bg-color);
+            color: var(--text-color);
+            font-family: var(--font-mono);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
-            transition: background-color 0.3s ease, color 0.3s ease;
         }
-        #chat-container {
+
+        .container {
             width: 100%;
-            max-width: 700px;
-            height: 80vh;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            background-color: white;
-            position: relative;
-            transition: background-color 0.3s ease;
+            max-width: 800px;
+            background-color: var(--card-bg-color);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.2); /* Hiệu ứng phát sáng nhẹ */
+            border: 2px solid var(--border-color);
         }
-        #messages {
-            flex-grow: 1;
-            padding: 1rem;
-            overflow-y: auto;
-            background-color: #e5ddd5;
-        }
-        .message.user-message {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 0.5rem;
-        }
-        .user-message .message-bubble {
-            background-color: #007bff;
-            color: white;
-            border-radius: 10px 10px 0 10px;
-            padding: 0.6rem 1rem;
-            max-width: 80%;
-            word-wrap: break-word;
-        }
-        .message.ai-message {
-            display: flex;
-            justify-content: flex-start;
-            margin-bottom: 0.5rem;
-        }
-        .ai-message .message-bubble {
-            background-color: #ffffff;
-            color: #333;
-            border-radius: 10px 10px 10px 0;
-            padding: 0.6rem 1rem;
-            max-width: 80%;
-            word-wrap: break-word;
-            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-        }
-        #input-area {
-            border-top: 1px solid #dee2e6;
-            padding: 1rem;
-            background-color: #f8f9fa;
-        }
-        .loading {
+
+        h1 {
+            color: var(--text-color);
             text-align: center;
-            padding: 10px;
-            font-style: italic;
-            color: #6c757d;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 5px var(--text-color);
         }
-        /* ====== DARK MODE ====== */
-        body.dark {
-            background-color: #181818;
-            color: #f0f0f0;
+
+        h2 {
+            color: var(--secondary-text-color);
+            margin-top: 25px;
+            padding-left: 10px;
+            border-left: 3px solid var(--text-color);
         }
-        body.dark #chat-container {
-            background-color: #222;
+
+        p, ul {
+            color: var(--secondary-text-color);
+            margin-bottom: 15px;
         }
-        body.dark #messages {
-            background-color: #2a2a2a;
+
+        ul {
+            list-style: none;
+            padding-left: 0;
         }
-        body.dark .ai-message .message-bubble {
-            background-color: #333;
-            color: #fff;
+
+        li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
         }
-        body.dark .user-message .message-bubble {
-            background-color: #0d6efd;
-        }
-        body.dark #input-area {
-            background-color: #2a2a2a;
-            border-top: 1px solid #444;
-        }
-        /* Nút đổi theme */
-        #toggle-theme {
+
+        li::before {
+            content: ">";
+            color: var(--text-color);
+            font-weight: bold;
             position: absolute;
-            top: 10px;
-            right: 10px;
-            border-radius: 50%;
-            width: 38px;
-            height: 38px;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            background: rgba(255, 255, 255, 0.3);
-            color: #fff;
-            cursor: pointer;
-            transition: background 0.2s ease;
+            left: 0;
         }
-        #toggle-theme:hover {
-            background: rgba(255, 255, 255, 0.5);
+
+        a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #ccff00; /* Màu sáng hơn khi hover */
+        }
+
+        /* Hiển thị mã giả lập 'terminal' */
+        .terminal {
+            background-color: #000000;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            margin-top: 20px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        
+        .prompt {
+            color: var(--text-color);
         }
     </style>
 </head>
 <body>
-    <div id="chat-container">
-        <div class="p-3 bg-primary text-white text-center">
-            <h5 class="mb-0">🤖 Trò Chuyện với Sim AI</h5>
+    <div class="container">
+        <h1>Hoàng Minh Quý</h1>
+        
+        <div class="terminal">
+            <span class="prompt">$</span> initializing profile_data... done. <br>
+            <span class="prompt">$</span> querying skill_matrix... <br>
+            [STATUS] Online | Location: Cyberspace | Role: Developer/Analyst <br>
+            [ACCESS] Level 7
         </div>
+        
+        <h2>Thông Tin Cơ Bản</h2>
+        <p>
+            **Vai trò:** Kỹ sư phần mềm/Chuyên viên phân tích bảo mật (thay đổi theo chuyên môn).<br>
+            **Sở thích:** Lập trình nhúng, Bảo mật web, Phân tích dữ liệu lớn.
+        </p>
 
-        <button id="toggle-theme" title="Đổi giao diện">🌙</button>
+        <h2>Kỹ Năng Kỹ Thuật (Tech Skills)</h2>
+        <ul>
+            <li>Ngôn ngữ: Python, JavaScript, C++, Go.</li>
+            <li>Framework/Tool: React, Node.js, Docker, Kubernetes.</li>
+            <li>Bảo mật: Penetration Testing, Cryptography, Network Analysis.</li>
+            <li>Hệ điều hành: Linux (Arch/Debian), Windows Server.</li>
+        </ul>
 
-        <div id="messages">
-            <div class="message ai-message">
-                <div class="message-bubble">Chào! Tôi là Sim AI dùng API Itsuki. Hãy hỏi tôi bất kỳ điều gì!</div>
-            </div>
-        </div>
-
-        <div id="input-area">
-            <div class="input-group">
-                <input type="text" id="user-input" class="form-control rounded-pill" placeholder="Nhập tin nhắn..." aria-label="Nhập tin nhắn">
-                <button id="send-button" class="btn btn-success ms-2 rounded-pill" type="button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
-                        <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.05A.5.5 0 0 0 .702 6.096l4.475 2.185.397-2.903L9.619 4.1a.5.5 0 0 1 .375.375L7.91 10.33l2.185 4.475a.5.5 0 0 0 .944-.065l5.05-15.228Z"/>
-                    </svg>
-                </button>
-            </div>
+        <h2>Liên Hệ & Dự Án</h2>
+        <ul>
+            <li><a href="mailto:your.email@example.com">Email: your.email@example.com</a></li>
+            <li><a href="https://github.com/yourusername" target="_blank">GitHub: /yourusername</a></li>
+            <li><a href="https://linkedin.com/in/yourprofile" target="_blank">LinkedIn: /yourprofile</a></li>
+        </ul>
+        
+        <div class="terminal">
+            <span class="prompt">$</span> end_of_file. exit(0);
         </div>
     </div>
-
-    <script>
-        const messagesDiv = document.getElementById('messages');
-        const userInput = document.getElementById('user-input');
-        const sendButton = document.getElementById('send-button');
-        // ✅ Proxy bypass CORS (đã cấu hình sẵn, hoạt động cho GitHub Pages)
-        const apiUrlBase = 'https://itsuki-proxy.vercel.app/api/ai?reply=';
-
-        // ======== Lưu & tải lịch sử chat ========
-        window.addEventListener('load', () => {
-            const saved = localStorage.getItem('chatHistory');
-            if (saved) messagesDiv.innerHTML = saved;
-        });
-        function saveChat() {
-            localStorage.setItem('chatHistory', messagesDiv.innerHTML);
-        }
-
-        // ======== Gửi tin nhắn ========
-        function appendMessage(text, sender) {
-            const messageWrapper = document.createElement('div');
-            messageWrapper.classList.add('message', sender === 'user' ? 'user-message' : 'ai-message');
-            const bubble = document.createElement('div');
-            bubble.classList.add('message-bubble');
-            bubble.textContent = text;
-            messageWrapper.appendChild(bubble);
-            messagesDiv.appendChild(messageWrapper);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-            saveChat();
-        }
-
-        async function sendMessage() {
-            const text = userInput.value.trim();
-            if (text === '') return;
-
-            appendMessage(text, 'user');
-            userInput.value = '';
-            userInput.disabled = true;
-            sendButton.disabled = true;
-
-            const loading = document.createElement('div');
-            loading.classList.add('loading');
-            loading.id = 'loading-indicator';
-            loading.textContent = 'AI đang gõ...';
-            messagesDiv.appendChild(loading);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-            try {
-                const response = await fetch(apiUrlBase + encodeURIComponent(text));
-                const loadingEl = document.getElementById('loading-indicator');
-                if (loadingEl) loadingEl.remove();
-
-                if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
-                const data = await response.json();
-                const aiReply = data.result || "Xin lỗi, không nhận được phản hồi hợp lệ.";
-                appendMessage(aiReply, 'ai');
-            } catch (error) {
-                const loadingEl = document.getElementById('loading-indicator');
-                if (loadingEl) loadingEl.remove();
-                appendMessage("⚠️ Lỗi kết nối hoặc API không phản hồi. Hãy thử lại sau.", 'ai');
-                console.error(error);
-            } finally {
-                userInput.disabled = false;
-                sendButton.disabled = false;
-                userInput.focus();
-            }
-        }
-
-        sendButton.addEventListener('click', sendMessage);
-        userInput.addEventListener('keypress', e => {
-            if (e.key === 'Enter') sendMessage();
-        });
-
-        // ======== Dark Mode ========
-        const toggleTheme = document.getElementById('toggle-theme');
-        toggleTheme.addEventListener('click', () => {
-            document.body.classList.toggle('dark');
-            toggleTheme.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
-        });
-    </script>
 </body>
 </html>
