@@ -3,142 +3,258 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hồ Sơ Kỹ Thuật - [Tên Của Bạn]</title>
+    <title>[TÊN CỦA BẠN] - Profile Index</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS cho giao diện phong cách kỹ thuật (Dark Theme) */
+        /* ------------------------------------------------------------------- */
+        /* CSS CƠ BẢN ĐỂ ĐẠT CHUẨN UI SẠCH & CHUYÊN NGHIỆP */
+        /* ------------------------------------------------------------------- */
         :root {
-            --main-bg-color: #1a1a1a;
-            --text-color: #00ff41; /* Màu xanh neon thường thấy */
-            --secondary-text-color: #cccccc;
-            --card-bg-color: #2a2a2a;
-            --border-color: #006400; /* Xanh đậm cho viền */
-            --font-mono: 'Hack', 'Fira Code', 'Roboto Mono', monospace;
+            --primary-color: #007bff; /* Màu chủ đạo: Xanh dương */
+            --text-color: #333;
+            --background-color: #f8f9fa;
+            --section-bg: #fff;
+            --border-color: #ddd;
         }
 
         body {
-            background-color: var(--main-bg-color);
+            font-family: 'Roboto', sans-serif;
             color: var(--text-color);
-            font-family: var(--font-mono);
+            background-color: var(--background-color);
             line-height: 1.6;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh;
         }
 
         .container {
-            width: 100%;
-            max-width: 800px;
-            background-color: var(--card-bg-color);
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 0 30px rgba(0, 255, 65, 0.2); /* Hiệu ứng phát sáng nhẹ */
-            border: 2px solid var(--border-color);
+            width: 90%;
+            max-width: 900px;
+            margin: 40px auto;
+            background: var(--section-bg);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 30px;
         }
 
-        h1 {
-            color: var(--text-color);
-            text-align: center;
+        header h1 {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 2.5em;
+        }
+
+        header h2 {
+            color: #6c757d;
+            font-size: 1.2em;
+            font-weight: 400;
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Styling cho các Section */
+        section {
             margin-bottom: 30px;
-            text-shadow: 0 0 5px var(--text-color);
+            padding: 15px 0;
+            border-bottom: 1px dashed var(--border-color);
         }
 
-        h2 {
-            color: var(--secondary-text-color);
-            margin-top: 25px;
+        section:last-child {
+            border-bottom: none;
+        }
+
+        h3 {
+            color: var(--primary-color);
+            font-size: 1.5em;
+            margin-top: 0;
+            margin-bottom: 15px;
             padding-left: 10px;
-            border-left: 3px solid var(--text-color);
+            border-left: 4px solid var(--primary-color);
         }
 
-        p, ul {
-            color: var(--secondary-text-color);
+        /* Bố cục Thông tin liên hệ dạng bảng */
+        .contact-table {
+            width: 100%;
+            border-collapse: collapse;
             margin-bottom: 15px;
         }
 
+        .contact-table td {
+            padding: 8px 0;
+            vertical-align: top;
+        }
+
+        .contact-table strong {
+            display: inline-block;
+            width: 100px; /* Cố định chiều rộng để căn chỉnh */
+            color: #555;
+        }
+
+        /* Danh sách Kỹ năng/Kinh nghiệm */
         ul {
             list-style: none;
             padding-left: 0;
         }
 
-        li {
-            margin-bottom: 8px;
+        ul li {
+            margin-bottom: 10px;
             position: relative;
             padding-left: 20px;
         }
 
-        li::before {
-            content: ">";
-            color: var(--text-color);
+        ul li::before {
+            content: "•";
+            color: var(--primary-color);
             font-weight: bold;
-            position: absolute;
-            left: 0;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
         }
 
-        a {
+        /* Style cho Kỹ năng chuyên môn dạng bảng */
+        .skills-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .skills-table th, .skills-table td {
+            text-align: left;
+            padding: 8px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .skills-table th {
+            background-color: #f1f1f1;
             color: var(--text-color);
-            text-decoration: none;
-            transition: color 0.3s;
         }
 
-        a:hover {
-            color: #ccff00; /* Màu sáng hơn khi hover */
+        /* Style cho Kinh nghiệm làm việc */
+        .experience-item h4 {
+            color: #495057;
+            margin-bottom: 5px;
+            font-size: 1.1em;
         }
-
-        /* Hiển thị mã giả lập 'terminal' */
-        .terminal {
-            background-color: #000000;
-            padding: 15px;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-            margin-top: 20px;
-            white-space: pre-wrap;
-            overflow-x: auto;
-        }
-        
-        .prompt {
-            color: var(--text-color);
+        .experience-item p.time {
+            font-style: italic;
+            color: #777;
+            margin-top: 0;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>Hoàng Minh Quý</h1>
-        
-        <div class="terminal">
-            <span class="prompt">$</span> initializing profile_data... done. <br>
-            <span class="prompt">$</span> querying skill_matrix... <br>
-            [STATUS] Online | Location: Cyberspace | Role: Developer/Analyst <br>
-            [ACCESS] Level 7
-        </div>
-        
-        <h2>Thông Tin Cơ Bản</h2>
-        <p>
-            **Vai trò:** Kỹ sư phần mềm/Chuyên viên phân tích bảo mật (thay đổi theo chuyên môn).<br>
-            **Sở thích:** Lập trình nhúng, Bảo mật web, Phân tích dữ liệu lớn.
-        </p>
 
-        <h2>Kỹ Năng Kỹ Thuật (Tech Skills)</h2>
-        <ul>
-            <li>Ngôn ngữ: Python, JavaScript, C++, Go.</li>
-            <li>Framework/Tool: React, Node.js, Docker, Kubernetes.</li>
-            <li>Bảo mật: Penetration Testing, Cryptography, Network Analysis.</li>
-            <li>Hệ điều hành: Linux (Arch/Debian), Windows Server.</li>
-        </ul>
+        <header>
+            <h1>[TÊN ĐẦY ĐỦ CỦA BẠN]</h1>
+            <h2>[CHỨC DANH/VỊ TRÍ HIỆN TẠI]</h2>
+        </header>
 
-        <h2>Liên Hệ & Dự Án</h2>
-        <ul>
-            <li><a href="mailto:your.email@example.com">Email: your.email@example.com</a></li>
-            <li><a href="https://github.com/yourusername" target="_blank">GitHub: /yourusername</a></li>
-            <li><a href="https://linkedin.com/in/yourprofile" target="_blank">LinkedIn: /yourprofile</a></li>
-        </ul>
-        
-        <div class="terminal">
-            <span class="prompt">$</span> end_of_file. exit(0);
-        </div>
+        <section id="contact">
+            <h3>1. 🌐 Thông Tin Liên Hệ & Liên Kết</h3>
+            <table class="contact-table">
+                <tr>
+                    <td><strong>Email</strong></td>
+                    <td><a href="mailto:[Email của bạn]">[Email của bạn]</a></td>
+                </tr>
+                <tr>
+                    <td><strong>Điện thoại</strong></td>
+                    <td>[Số điện thoại]</td>
+                </tr>
+                <tr>
+                    <td><strong>LinkedIn</strong></td>
+                    <td><a href="https://www.linkedin.com/" target="_blank">[Tên người dùng LinkedIn]</a></td>
+                </tr>
+                <tr>
+                    <td><strong>Portfolio</strong></td>
+                    <td><a href="https://www.merriam-webster.com/dictionary/portfolio" target="_blank">https://github.com/topics/portfolio</a></td>
+                </tr>
+            </table>
+        </section>
+
+        <section id="bio">
+            <h3>2. 📝 Tiểu Sử Cá Nhân</h3>
+            <p>
+                [Ví dụ: Chuyên gia Marketing Kỹ thuật số với 5 năm kinh nghiệm, tập trung vào việc tạo ra các chiến lược chuyển đổi số hiệu quả, giúp tăng trưởng doanh thu 30% hàng năm. Có khả năng lãnh đạo đội nhóm và đam mê phân tích dữ liệu để tối ưu hóa hiệu suất chiến dịch.]
+            </p>
+        </section>
+
+        <section id="hard-skills">
+            <h3>3. 🎯 Kỹ Năng Chuyên Môn</h3>
+
+            <h4>💻 Công Nghệ/Phần Mềm</h4>
+            <table class="skills-table">
+                <thead>
+                    <tr>
+                        <th>Kỹ năng</th>
+                        <th>Mức độ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Python/Django</td>
+                        <td>⭐⭐⭐⭐⭐ (Chuyên gia)</td>
+                    </tr>
+                    <tr>
+                        <td>ReactJS/Next.js</td>
+                        <td>⭐⭐⭐⭐ (Thành thạo)</td>
+                    </tr>
+                    <tr>
+                        <td>Figma & Adobe XD</td>
+                        <td>Advanced</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>📊 Lĩnh Vực Chuyên Sâu</h4>
+            <ul>
+                <li>Phân tích Dữ liệu và Báo cáo (Data Analysis)</li>
+                <li>Quản lý dự án theo phương pháp Scrum/Agile</li>
+                <li>Tối ưu hóa Hiệu suất Website (Performance Optimization)</li>
+            </ul>
+        </section>
+
+        <section id="soft-skills">
+            <h3>4. 🤝 Kỹ Năng Mềm</h3>
+            <ul>
+                <li>**Giao tiếp & Thuyết trình:** Khả năng truyền đạt ý tưởng kỹ thuật phức tạp một cách dễ hiểu.</li>
+                <li>**Giải quyết Vấn đề:** Tư duy phản biện và khả năng tìm ra giải pháp sáng tạo dưới áp lực.</li>
+                <li>**Lãnh đạo Nhóm:** Kinh nghiệm cố vấn và dẫn dắt đội ngũ 5-7 người.</li>
+            </ul>
+        </section>
+
+        <section id="experience">
+            <h3>5. 💼 Kinh Nghiệm Làm Việc</h3>
+
+            <div class="experience-item">
+                <h4>[Chức Danh Gần Nhất] | [Tên Công Ty]</h4>
+                <p class="time">MM/YYYY - Hiện tại</p>
+                <ul>
+                    <li>Quản lý và triển khai [Tên dự án], giúp **tăng tỷ lệ chuyển đổi X%** trong 6 tháng.</li>
+                    <li>Dẫn dắt đội ngũ 5 kỹ sư, thực hiện các quy trình kiểm thử và tích hợp liên tục (CI/CD).</li>
+                    <li>Tham gia thiết kế kiến trúc hệ thống backend sử dụng [Công nghệ].</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <h4>[Chức Danh Trước Đó] | [Tên Công Ty]</h4>
+                <p class="time">MM/YYYY - MM/YYYY</p>
+                <ul>
+                    <li>Phát triển các tính năng frontend chính bằng [Công nghệ].</li>
+                    <li>Giảm thiểu 20% lỗi báo cáo từ người dùng thông qua tối ưu hóa code.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="education">
+            <h3>6. 🎓 Học Vấn & Chứng Chỉ</h3>
+            <ul>
+                <li>**Kỹ sư Phần mềm**, Đại học Bách Khoa TP.HCM | Năm 20XX</li>
+                <li>**Chứng chỉ AWS Certified Developer** | Amazon Web Services | Năm 20XX</li>
+            </ul>
+        </section>
+
     </div>
 </body>
 </html>
